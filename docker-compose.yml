@@ -1,0 +1,16 @@
+version: '2'
+services:
+  ffmpeg:
+    image: "klim:opencv"
+    volumes:
+     - .:/code
+    container_name: ffmpeg
+    command: ffmpeg -i "http://video1.belrts.ru:9786/cameras/4/streaming/main.flv?authorization=Basic%20d2ViOndlYg%3D%3D"     -r 3  -acodec copy -vf drawtext="fontsize=90:fontcolor=white:fontfile=/opt/CameraRodina/DroidSerif-Regular.ttf:text='%{localtime\:%X}'"     -movflags frag_keyframe+empty_moov -f mpegts udp://opencv:5001
+  opencv:
+    image: "klim:opencv"
+    links:
+    - ffmpeg
+    volumes:
+    - .:/opt
+    container_name: opencv
+    command: /opt/do.sh
